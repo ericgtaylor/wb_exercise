@@ -1,0 +1,204 @@
+
+
++--------------------------------------------------------------------+
+| EXERCISE OVERVIEW: A Fund Raising Revenue Prediction Model         | 
++--------------------------------------------------------------------+
+
+This problem is meant to evaluate the user’s approach and strategies
+in developing a predictive model in a high dimensional setting. Please document
+your analysis and model creation process thoroughly. A clear description of your
+thought process and reasoning for each step of your work is much more valuable
+than the results predicted on the testing set (although a good working
+model is obviously a plus). You can use software or libraries
+of your choice as long as your thought process is clearly and thoroughly
+documented.
+
+This is a high dimensional problem with features that may appear obscure
+or unclear to the user. Part of the challenge of this task is extract
+valuable features when the meaning of the individual features is unclear or
+its unwieldy to individually evaluate each one.
+
+BACKGROUND AND OBJECTIVES
+-------------------------
+
+The data set for this exercise are the results of a fundraising effort. Requests
+for donations to aid US veterans were mailed (referred to as 97NK mailing) to a large set of people
+who have donated to a similar cause in the past.
+
+The data set for this exercise includes a large number of features
+about the set of people who were mailed a request as well as two response variables called
+‘Target_B’ and ‘Target_D’. ‘Target_A’ refers to whether the member responded to the request.
+‘Target_D’ is the dollar amount of the member’s donation if the user donated.
+
+Your goal is build a model that can improve the cost-effectiveness of future direct
+marketing effort by maximizing the net revenue (a regression or estimation task) generated
+from mailing another set of donation requests.
+
+The training and testing files include 191,779 donors who received the
+mailing, with responders to the mailing marked with a flag in the
+TARGET_B field.  The total dollar amount of each responder's gift is
+in the TARGET_D field.
+
+The overall response rate for this direct mail promotion is 5.1%.  The
+distribution of the target fields in the learning files
+is as follows:
+
+
+  Learning Data Set
+  Target Variable: Binary Indicator of Response to 97NK 
+  Mailing
+                                Cumulative  Cumulative
+  TARGET_B   Frequency   Percent   Frequency    Percent
+  ------------------------------------------------------
+         0      90569      94.9       90569       94.9
+         1       4843       5.1       95412      100.0
+
+
+  Learning Data Set
+  Target Variable: Donation Amount (in $) to 97NK Mailing   
+
+  Variable       N          Mean   Minimum       Maximum 
+  ------------------------------------------------------ 
+  TARGET_D   95412     0.7930732         0   200.0000000 
+  ------------------------------------------------------ 
+
+
+The average donation amount (in $) among the responders is: 
+
+
+  Learning Data Set
+  Target Variable: Donation Amount (in $) to 97NK 
+  Mailing  
+
+      N          Mean       Minimum       Maximum
+  -----------------------------------------------
+   4843    15.6243444     1.0000000   200.0000000
+  -----------------------------------------------
+
+
++--------------------------------------------------------------------+
+| EVALUATION RULES                                                   |
++--------------------------------------------------------------------+
+
+There are two separate pieces to the submission. The first is the code
+along with documentation describing your analysis and model 
+building process. The other is a file containing predictions on the
+testing set. Each prediction should be a line with the unique record
+identifier (field name: CONTROLN) along with the prediction value. The
+code along with a documentation of your thought process is more
+important than the prediction file.
+
+The objective of the analysis will be to maximize the net
+revenue generated from the mailed promotions according to the testing set.
+The response variable is, thus, continuous (for 
+the lack of a better common term.) Although we are releasing both the
+binary and the continuous versions of the target variable (TARGET_B
+and TARGET_D respectively), the
+predicted value of the donation (dollar) amount (for the target
+variable TARGET_D) will be used for evaluating the results. So, returning the
+predicted value of the binary target variable TARGET_B and its
+associated probability/strength will not be sufficient. 
+
+The typical outcome of predictive modeling in database marketing is 
+an estimate of the expected response/return per customer in the
+database. A marketer will mail to a customer so long as the expected 
+return from an order exceeds the cost invested in generating the order, 
+i.e., the cost of promotion. For our purpose, the package cost 
+(including the mail cost) is $0.68 per piece mailed.
+
+The evaluation of the results will be based solely on the net
+revenue generated on the hold-out or validation sample.
+
+The measure we will use is:
+
+  Sum (the actual donation amount - $0.68) over all records for 
+  which the expected revenue (or predicted value of the donation) 
+  is over $0.68.
+
+This is a direct measure of profit.
+
+
++--------------------------------------------------------------------+
+| IMPORTANT ADDITIONAL NOTES                                         |
++--------------------------------------------------------------------+
+
+1. This data set contains a large number of features. Part of the challenge
+is finding ways to deal with a large numbers of features which you might
+not know the meaning of.
+
+2. Some of the fields in the analysis file may contain data entry and/or
+formatting errors. Cleaning the data is not the purpose of this exercise.
+We are more interested in your approach to the overall problem than the
+actual performance of your model, so don’t spend much time cleaning
+data even if you think it will hurt your model’s performance.
+
+
+3. The data sets are in comma delimited format. The learning dataset
+<train_set> contains 95412 records and 481 fields. The first/header
+row of the data set contains the field names.
+
+The validation dataset <testing_set> contains 96367 records and 479
+variables. The first/header row of the data set contains the field
+names.
+
+THE RECORDS IN THE VALIDATION DATASET ARE IDENTICAL TO THE RECORDS IN
+THE LEARNING DATASET EXCEPT THAT THE VALUES FOR THE TARGET/DEPENDENT
+VARIABLES ARE MISSING (i.e., the fields TARGET_B and TARGET_D are
+not included in the validation data set.)
+
+4. The data dictionary (for both the learning and the validation data
+set) is included in the file <data_details>. The fields in the data
+dictionary are ordered by the position of the fields in the learning
+data set. The dictionary for the validation data set is identical to
+the dictionary for the learning data set except the two target fields
+(target_B and target_D) are missing in the validation data set.
+
+5. Blanks in the string (or character) variables/fields and periods in
+the numeric variables correspond to missing values.
+
+6. Each record has a unique record identifier or index (field name:
+CONTROLN.) For each record, there are two target/dependent variables
+(field names: TARGET_B and TARGET_D). TARGET_B is a binary variable
+indicating whether or not the record responded to the promotion of
+interest ("97NK" mailing) while TARGET_D contains the donation amount
+(dollar) and is only observed for those that responded to the
+promotion. Neither of these should be used to train the model.
+
+Each record in the returned file should consist of the following two
+values:
+
+a. The unique record identifier or index (field name: CONTROLN)
+b. Predicted value of the donation (dollar) amount (for the target
+variable TARGET_D) for that record 
+
+
++--------------------------------------------------------------------+
+| DATA SOURCES and ORDER & TYPE OF THE VARIABLES IN THE DATA SETS    |
++--------------------------------------------------------------------+
+
+The dataset includes:
+
+o 24 months of detailed promotion and giving history (covering the
+  period 12 to 36 months prior to the "97NK" mailing)
+
+o A summary of the promotions sent to the donors over the most recent
+  12 months prior to the "97NK" mailing (none of these
+  donors responded to any of these promotions)
+
+o Summary variables reflecting each donor's lifetime giving history
+  (e.g., total # of donations prior to "97NK" mailing, total $ amount
+  of the donations, etc.)
+
+o Overlay demographics, including a mix of household and area level
+  data
+
+o All other available data (e.g., date of first
+  gift, state, origin source, etc.)
+
+The fields are described in greater detail in the data_details file.
+
+
+ 
+
+
+

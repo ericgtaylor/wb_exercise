@@ -119,16 +119,36 @@ for (i in 1:ncol(tdat.num)) {
     }
   }
 }
+# revert for controln and target_d
+tdat.num$controln=10^tdat.num$controln
+if (do.target_d==T) {
+  tdat.num$target_d=10^tdat.num$target_d
+  tdat.num$target_d[tdat.num$target_d==0.1]=0
+}
+
 # normalize everything to ensure similar scales
 # remove any columns with zero variance before scaling
 vars.0sd=colnames(tdat.num)[apply(tdat.num,2,sd)==0]
 tdat.num=tdat.num[,!(colnames(tdat.num)%in%vars.0sd)]
-tdat.num.scaled=scale(tdat.num)
+if (do.target_d==T) {
+  target_d.mean=mean(tdat.num$target_d,na.rm=T)
+  target_d.sd=sd(tdat.num$target_d,na.rm=T)
+}
+vars.noscale=c("target_d","controln")
+vars.noscale.indx=match(vars.noscale,colnames(tdat.num))
+vars.noscale.indx=vars.noscale.indx[!is.na(vars.noscale.indx)]
+tdat.num.noscaled=tdat.num[,vars.noscale.indx]
+vars.scale.indx=match(vars.noscale,colnames(tdat.num))
+vars.scale.indx=vars.scale.indx[!is.na(vars.scale.indx)]
+tdat.num.scaled=scale(tdat.num[,-vars.scale.indx])
 sum(is.na(tdat.num.scaled)) # make sure there are no NAs
 # how many outliers are there?
 mean(abs(tdat.num.scaled)>4) # very few outliers
 # add back in the numeric variables to tdat
-tdat=cbind(tdat,tdat.num.scaled)
+tdat=cbind(tdat,tdat.num.scaled,tdat.num.noscaled)
+if (do.target_d==T) {
+  colnames(tdat)[ncol(tdat)]="controln"
+}
 # 2nd use lasso regression to iteratively impute missing values for all variables
 #   started (see below) but no time for this, must push forward, must get predictions!
 # vars.miss=vars.miss[order(runif(length(vars.miss)))]

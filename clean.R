@@ -146,9 +146,8 @@ sum(is.na(tdat.num.scaled)) # make sure there are no NAs
 mean(abs(tdat.num.scaled)>4) # very few outliers
 # add back in the numeric variables to tdat
 tdat=cbind(tdat,tdat.num.scaled,tdat.num.noscaled)
-if (do.target_d==T) {
-  colnames(tdat)[ncol(tdat)]="controln"
-}
+colnames(tdat)[ncol(tdat)]="controln"
+
 # 2nd use lasso regression to iteratively impute missing values for all variables
 #   started (see below) but no time for this, must push forward, must get predictions!
 # vars.miss=vars.miss[order(runif(length(vars.miss)))]

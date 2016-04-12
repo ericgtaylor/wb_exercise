@@ -122,7 +122,7 @@ rm.vars=-match(c("target_b"),colnames(tdat))
 # reformat as numeric now that tdat is separated from vdat
 tdat$target_d=as.numeric(as.character(tdat$target_d))
 tdat.train=tdat[train.indxs,rm.vars]
-tdat.train=sample_n(tdat.train,10000)
+tdat.train=sample_n(tdat.train,10000) # to speed things up, don't train on the whole set
 tdat.test=tdat[-train.indxs,rm.vars]
 # do the random forest
 # learned a while back not to call the formula (see tip on the list below)
@@ -141,12 +141,14 @@ plot.df$pred=cut(plot.df$pred,
 with(plot.df,bargraph.CI(pred,act,
                          xlab="predicted values (scaled) quantiles",ylab="actual values (scaled)"))
 
+# if you DO NOT log scale and normalize target_d then run the command below:
 tdat.rf.val=predict(tdat.rf,select(vdat,-target_d))
-tdat.rf.val=10^(tdat.rf.val*tdat.target_d.sd+tdat.target_d.mean)
+# if you log scale and normalize target_d then run the command below:
+# tdat.rf.val=10^(tdat.rf.val*tdat.target_d.sd+tdat.target_d.mean)
 hist(tdat.rf.val)
 
 tdat.rf.val=data.frame(pred=tdat.rf.val,
                        controln=controln[tvdat$set=="validation"])
-
+write.csv(tdat.rf.val,file="/Users/erictayor/wb_exercise/validation_predictions.csv")
 
 
